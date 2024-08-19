@@ -59,3 +59,19 @@ Validator.isEmail = function(selector){
         }
     }
 }
+
+//Rule for password validation
+Validator.isPassword = function(selector){
+    return {
+        selector: selector,
+        test: (value) => {
+            var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            // return regex.test(value) ? undefined : 'Mật khẩu phải có ít nhất 8 kí tự, bao gồm 1 kí tự in hoa, 1 kí tự in thường, 1 số và 1 kí tự đặc biệt!';
+            if(value.trim() === '') {
+                return 'Vui lòng nhập mật khẩu!';
+            } else {
+                return regex.test(value) ? undefined : 'Mật khẩu phải có ít nhất 8 kí tự, bao gồm 1 kí tự in hoa, 1 kí tự in thường, 1 số và 1 kí tự đặc biệt!';
+            }
+        }
+    }
+}
