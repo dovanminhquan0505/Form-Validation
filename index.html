@@ -29,13 +29,13 @@
       
           <div class="form-group">
             <label for="password" class="form-label">Mật khẩu</label>
-            <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" class="form-control">
+            <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" class="form-control" autocomplete="on">
             <span class="form-message"></span>
           </div>
       
           <div class="form-group">
             <label for="password_confirmation" class="form-label">Nhập lại mật khẩu</label>
-            <input id="password_confirmation" name="password_confirmation" placeholder="Nhập lại mật khẩu" type="password" class="form-control">
+            <input id="password_confirmation" name="password_confirmation" placeholder="Nhập lại mật khẩu" type="password" class="form-control" autocomplete="on">
             <span class="form-message"></span>
           </div>
       
@@ -43,6 +43,16 @@
         </form>
       
       </div>
-    <script src="/assets/JS.js"></script>
+    <script src="/assets/validator.js"></script>
+    <script>
+        //Output required
+        Validator({
+            form: '#form-1',
+            rules: [
+                Validator.isRequired('#fullname'),
+                Validator.isEmail('#email')
+            ]
+        });
+    </script>
 </body>
 </html>
