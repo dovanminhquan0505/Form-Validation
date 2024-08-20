@@ -58,7 +58,10 @@
                 Validator.isConfirmPassword('#password_confirmation', function(){
                   return document.querySelector('#form-1 #password').value;
                 }, 'Vui lòng nhập mật khẩu!')
-            ]
+            ],
+            onSubmit: function(data){
+              console.log(data);
+            }
         });
     </script>
 </body>

@@ -26,11 +26,39 @@ function Validator(options){
             errorElement.innerText = '';
             inputElement.parentElement.classList.remove('invalid');
         }
+        return !errorMessage;
     }
 
     //Lấy element của form cần validate
     var formElement = document.querySelector(options.form);
     if(formElement){
+        //Loại bỏ hành vi mặc định khi submit form
+        formElement.onsubmit = function(e){
+            e.preventDefault();
+
+            var isFormValid = true;
+
+
+            //Thực hiện lặp qua từng rules và validate
+            options.rules.forEach((rule) => {
+                var inputElement = formElement.querySelector(rule.selector);
+                var isValid = validate(inputElement, rule);
+                if(!isValid){
+                    isFormValid = false;
+                }
+            });
+            if(isFormValid){
+                if(typeof options.onSubmit === 'function'){
+                    var enableInputs = formElement.querySelectorAll('[name]'); 
+                    var formValues = Array.from(enableInputs).reduce((values, input) => {
+                        return (values[input.name] = input.value) && values;
+                    }, {})
+                    options.onSubmit(formValues);
+                }
+            }
+        }
+
+        //Lặp qua mỗi rule và xử lý (lắng nghe sự kiện blur, input, ...)
         options.rules.forEach((rule) => {
             //Lưu lại rules cho mỗi input
             if(Array.isArray(selectorRules[rule.selector])){
