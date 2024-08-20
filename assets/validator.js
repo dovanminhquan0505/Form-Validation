@@ -1,25 +1,45 @@
 //Validator Constructor
 function Validator(options){
-    
+    var selectorRules = {};
+
     //Hàm thực hiện validate
     function validate(inputElement, rule){
         var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
-        var errorMessage = rule.test(inputElement.value);
+        var errorMessage;
+
+        //Lấy ra các rules của selector
+        var rules = selectorRules[rule.selector];
+
+        //Lặp qua từng rules và kiểm tra
+        //Nếu có lỗi thì dừng việc kiểm tra
+        for(var i = 0; i < rules.length; ++i){
+            errorMessage = rules[i](inputElement.value);
             if(errorMessage){
-                errorElement.innerText = errorMessage;
-                inputElement.parentElement.classList.add('invalid');
-            }else {
-                errorElement.innerText = '';
-                inputElement.parentElement.classList.remove('invalid');
+                break;
             }
+        }
+
+        if(errorMessage){
+            errorElement.innerText = errorMessage;
+            inputElement.parentElement.classList.add('invalid');
+        }else {
+            errorElement.innerText = '';
+            inputElement.parentElement.classList.remove('invalid');
+        }
     }
 
     //Lấy element của form cần validate
     var formElement = document.querySelector(options.form);
     if(formElement){
         options.rules.forEach((rule) => {
+            //Lưu lại rules cho mỗi input
+            if(Array.isArray(selectorRules[rule.selector])){
+                selectorRules[rule.selector].push(rule.test);
+            } else {
+                selectorRules[rule.selector] = [rule.test];
+            }
+
             var inputElement = formElement.querySelector(rule.selector);
-            console.log(inputElement);
             if(inputElement){
                 //Xử lý trường hợp blur khỏi input
                 inputElement.onblur = () => {
@@ -41,34 +61,34 @@ function Validator(options){
 //Nguyên tắc của các rules
 //1. Khi có lỗi => Trả ra message lỗi
 //2. Khi hợp lệ => Không trả ra cái gì cả (undefined)
-Validator.isRequired = function(selector){
+Validator.isRequired = function(selector, message){
     return {
         selector: selector,
         test: (value) => {
-            return value.trim() ? undefined : 'Vui lòng nhập tên!';
+            return value.trim() ? undefined : message || 'Vui lòng nhập trường này!';
         }
     }
 }
 
-Validator.isEmail = function(selector){
+Validator.isEmail = function(selector, message){
     return {
         selector: selector,
         test: (value) => {
             var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            return regex.test(value) ? undefined : 'Vui lòng nhập đúng định dạng email!';
+            return regex.test(value) ? undefined : message || 'Vui lòng nhập đúng định dạng email';
         }
     }
 }
 
 //Rule for password validation
-Validator.isPassword = function(selector){
+Validator.isPassword = function(selector, message){
     return {
         selector: selector,
         test: (value) => {
             var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
             // return regex.test(value) ? undefined : 'Mật khẩu phải có ít nhất 8 kí tự, bao gồm 1 kí tự in hoa, 1 kí tự in thường, 1 số và 1 kí tự đặc biệt!';
             if(value.trim() === '') {
-                return 'Vui lòng nhập mật khẩu!';
+                return message;
             } else {
                 return regex.test(value) ? undefined : 'Mật khẩu phải có ít nhất 8 kí tự, bao gồm 1 kí tự in hoa, 1 kí tự in thường, 1 số và 1 kí tự đặc biệt!';
             }
@@ -76,11 +96,11 @@ Validator.isPassword = function(selector){
     }
 }
 
-Validator.isConfirmPassword = function(selector, getconfirmValue){
+Validator.isConfirmPassword = function(selector, getconfirmValue, message){
     return {
         selector: selector,
         test: (value) => {
-            return value === getconfirmValue() ? undefined : 'Vui lòng kiểm tra lại!';
+            return value === getconfirmValue() ? undefined : message || 'Vui lòng kiểm tra lại!';
         }
     }
 }

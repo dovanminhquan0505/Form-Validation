@@ -50,12 +50,14 @@
             form: '#form-1',
             errorSelector: '.form-message',
             rules: [
-                Validator.isRequired('#fullname'),
+                Validator.isRequired('#fullname', 'Vui lòng nhập tên đầy đủ!'),
+                Validator.isRequired('#email'),
                 Validator.isEmail('#email'),
-                Validator.isPassword('#password'),
+                Validator.isPassword('#password', 'Vui lòng nhập mật khẩu!'),
+                Validator.isRequired('#password_confirmation'),
                 Validator.isConfirmPassword('#password_confirmation', function(){
                   return document.querySelector('#form-1 #password').value;
-                })
+                }, 'Vui lòng nhập mật khẩu!')
             ]
         });
     </script>
