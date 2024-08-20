@@ -48,6 +48,7 @@ function Validator(options){
                 }
             });
             if(isFormValid){
+                //Submit form bằng JavaScript
                 if(typeof options.onSubmit === 'function'){
                     var enableInputs = formElement.querySelectorAll('[name]'); 
                     var formValues = Array.from(enableInputs).reduce((values, input) => {
@@ -55,6 +56,9 @@ function Validator(options){
                     }, {})
                     options.onSubmit(formValues);
                 }
+            }else {
+                //Submit với hành vi mặc đinh của trình duyệt
+                formElement.submit();
             }
         }
 
