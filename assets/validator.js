@@ -1,10 +1,20 @@
 //Validator Constructor
 function Validator(options){
+    //Tạo hàm lấy thẻ cha cuối cùng của input
+    function getParent(element, selector){
+        while(element.parentElement){
+            if(element.parentElement.matches(selector)){
+                return element.parentElement;
+            }
+            element = element.parentElement;
+        }
+    }
+    
     var selectorRules = {};
 
     //Hàm thực hiện validate
     function validate(inputElement, rule){
-        var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+        var errorElement = getParent(inputElement, options.formGroupSelector).querySelector(options.errorSelector);
         var errorMessage;
 
         //Lấy ra các rules của selector
@@ -52,7 +62,8 @@ function Validator(options){
                 if(typeof options.onSubmit === 'function'){
                     var enableInputs = formElement.querySelectorAll('[name]'); 
                     var formValues = Array.from(enableInputs).reduce((values, input) => {
-                        return (values[input.name] = input.value) && values;
+                        (values[input.name] = input.value)
+                        return values;
                     }, {})
                     options.onSubmit(formValues);
                 }
@@ -128,11 +139,11 @@ Validator.isPassword = function(selector, message){
     }
 }
 
-Validator.isConfirmPassword = function(selector, getconfirmValue, message){
+Validator.isConfirmPassword = function(selector, getConfirmValue, message){
     return {
         selector: selector,
         test: (value) => {
-            return value === getconfirmValue() ? undefined : message || 'Vui lòng kiểm tra lại!';
+            return value === getConfirmValue() ? undefined : message || 'Vui lòng kiểm tra lại!';
         }
     }
 }
