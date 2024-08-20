@@ -31,10 +31,10 @@ function Validator(options){
 
         if(errorMessage){
             errorElement.innerText = errorMessage;
-            inputElement.parentElement.classList.add('invalid');
+            getParent(inputElement, options.formGroupSelector).classList.add('invalid');
         }else {
             errorElement.innerText = '';
-            inputElement.parentElement.classList.remove('invalid');
+            getParent(inputElement, options.formGroupSelector).classList.remove('invalid');
         }
         return !errorMessage;
     }
@@ -91,9 +91,9 @@ function Validator(options){
 
                 //Xử lý mỗi khi người dùng đang nhập vào input
                 inputElement.oninput = () => {
-                    var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+                    var errorElement = getParent(inputElement, options.formGroupSelector).querySelector(options.errorSelector);
                     errorElement.innerText = '';
-                    inputElement.parentElement.classList.remove('invalid');
+                    getParent(inputElement, options.formGroupSelector).classList.remove('invalid');
                 }
             }
         });
