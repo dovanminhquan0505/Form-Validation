@@ -75,3 +75,12 @@ Validator.isPassword = function(selector){
         }
     }
 }
+
+Validator.isConfirmPassword = function(selector, getconfirmValue){
+    return {
+        selector: selector,
+        test: (value) => {
+            return value === getconfirmValue() ? undefined : 'Vui lòng kiểm tra lại!';
+        }
+    }
+}
