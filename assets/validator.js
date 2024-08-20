@@ -23,7 +23,13 @@ function Validator(options){
         //Lặp qua từng rules và kiểm tra
         //Nếu có lỗi thì dừng việc kiểm tra
         for(var i = 0; i < rules.length; ++i){
-            errorMessage = rules[i](inputElement.value);
+            switch(inputElement.type){
+                case 'checkbox':
+                case 'radio':
+                    break;
+                default:
+                    errorMessage = rules[i](inputElement.value);
+            }
             if(errorMessage){
                 break;
             }
@@ -66,10 +72,10 @@ function Validator(options){
                         return values;
                     }, {})
                     options.onSubmit(formValues);
+                } else {
+                    //Submit với hành vi mặc đinh của trình duyệt
+                    formElement.submit();
                 }
-            }else {
-                //Submit với hành vi mặc đinh của trình duyệt
-                formElement.submit();
             }
         }
 
