@@ -86,6 +86,9 @@ function Validator(options){
                             case 'radio':
                                 values[input.name] = formElement.querySelector('input[name="' + input.name + '"]:checked').value;
                                 break;
+                            case 'file':
+                                values[input.name] = input.files;
+                                break;
                             default:
                                 values[input.name] = input.value;
                         }
@@ -170,7 +173,11 @@ Validator.isConfirmPassword = function(selector, getConfirmValue, message){
     return {
         selector: selector,
         test: (value) => {
-            return value === getConfirmValue() ? undefined : message || 'Vui lòng kiểm tra lại!';
+            if(value.trim() === ''){
+                return message;
+            }else {
+                return value === getConfirmValue() ? undefined : 'Vui lòng kiểm tra lại mật khẩu!';
+            }
         }
     }
 }

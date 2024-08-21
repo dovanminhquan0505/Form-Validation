@@ -40,6 +40,12 @@
           </div>
 
           <div class="form-group">
+            <label for="avatar" class="form-label">Ảnh đại diện</label>
+            <input id="avatar" name="avatar" type="file" class="form-control" autocomplete="on">
+            <span class="form-message"></span>
+          </div>
+
+          <div class="form-group">
             <label for="province" class="form-label">Tỉnh/TP</label>
             <select id="province" name="province" class="form-control" autocomplete="on">
               <option value="">--Chọn Tỉnh/TP--</option>
@@ -82,11 +88,12 @@
                 Validator.isRequired('#email'),
                 Validator.isEmail('#email'),
                 Validator.isPassword('#password', 'Vui lòng nhập mật khẩu!'),
-                Validator.isRequired('#password_confirmation'),
+                Validator.isRequired('#password_confirmation', 'Vui lòng nhập lại mật khẩu'),
                 Validator.isRequired('#province'),
                 Validator.isConfirmPassword('#password_confirmation', function(){
                   return document.querySelector('#form-1 #password').value;
                 }, 'Vui lòng nhập mật khẩu!'),
+                Validator.isRequired('#avatar'),
                 Validator.isRequired('input[name="gender"]')
             ],
             onSubmit: function(data){
