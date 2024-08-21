@@ -26,6 +26,9 @@ function Validator(options){
             switch(inputElement.type){
                 case 'checkbox':
                 case 'radio':
+                    errorMessage = rules[i](
+                        formElement.querySelector(rule.selector + ':checked')
+                    );
                     break;
                 default:
                     errorMessage = rules[i](inputElement.value);
@@ -68,7 +71,15 @@ function Validator(options){
                 if(typeof options.onSubmit === 'function'){
                     var enableInputs = formElement.querySelectorAll('[name]'); 
                     var formValues = Array.from(enableInputs).reduce((values, input) => {
-                        (values[input.name] = input.value)
+                        switch(input.type){
+                            case 'checkbox':
+                            case 'radio':
+                                values[input.name] = formElement.querySelector('input[name="' + input.name + '"]:checked').value;
+                                break;
+                            default:
+                                values[input.name] = input.value;
+                        }
+
                         return values;
                     }, {})
                     options.onSubmit(formValues);
@@ -88,9 +99,9 @@ function Validator(options){
                 selectorRules[rule.selector] = [rule.test];
             }
 
-            var inputElement = formElement.querySelector(rule.selector);
-            if(inputElement){
-                //Xử lý trường hợp blur khỏi input
+            var inputElements = formElement.querySelectorAll(rule.selector);
+
+            Array.from(inputElements).forEach(function(inputElement){
                 inputElement.onblur = () => {
                     validate(inputElement, rule);
                 }
@@ -101,7 +112,7 @@ function Validator(options){
                     errorElement.innerText = '';
                     getParent(inputElement, options.formGroupSelector).classList.remove('invalid');
                 }
-            }
+            });
         });
     }
 }
@@ -114,7 +125,7 @@ Validator.isRequired = function(selector, message){
     return {
         selector: selector,
         test: (value) => {
-            return value.trim() ? undefined : message || 'Vui lòng nhập trường này!';
+            return value ? undefined : message || 'Vui lòng nhập trường này!';
         }
     }
 }
